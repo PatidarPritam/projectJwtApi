@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -37,22 +39,32 @@ class AuthController extends Controller
        
         }
 
-
         public function login(LoginRequest $request){
-            try{
-                $email = $request->input('email');
-                $password = $request->input('password');
-                if(Auth::attempt(['email'=> $email,'password'=> $password])){
-                    $user = Auth::user();
-                    return ResponseHelper::success(message:'user login successfully',data:$user);
-                   
+            try {
+                $credentials = $request->only('email', 'password');
+    
+                if (!$token = JWTAuth::attempt($credentials)) {
+                    return ResponseHelper::errors(message: 'Unable to login user due to invalid credentials');
                 }
-                   return  ResponseHelper::errors(message:'unable to login user! due to invalid credentials ');
+                $user = Auth::user();
+    
+                return ResponseHelper::success(  message: 'User logged in successfully',
+                    data: [
+                        'user' => $user,
+                        'token' => $token
+                    ]
+                );
+    
+            } catch (\Exception $e) {
+                return ResponseHelper::errors(message: 'Unable to login user: ' . $e->getMessage());
             }
-            catch(\Exception $e){
-                return ResponseHelper::errors(message:"unable to login user"  .$e->getMessage());
-                }
 
         }
 
+
+        public function profile(){
+            $user = Auth::user();
+            return ResponseHelper::success(message:'user profile',data:$user);
+            
+        }
 }

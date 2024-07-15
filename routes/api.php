@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PasswordUpdateController;
+use App\Http\Controllers\ProfileUpdateController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,5 +27,11 @@ Route::middleware(['auth:api'])->group(function(){
 Route::post('forgot-password', [PasswordResetController::class, 'sendResetLink']);
 Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
 Route::get('reset-password', [PasswordResetController::class, 'resetPassword']);
+
+
+
+Route::middleware('auth:api')->group(function () {
+    Route::put('/profileUpdate', [ProfileUpdateController::class, 'update']);
+});
 
 

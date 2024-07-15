@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use App\Models\User;
-use App\Models\PasswordReset; // Assuming you have this model
-use App\Notifications\ResetPasswordNotification; // Modify as needed
+use App\Models\PasswordReset;
+use App\Notifications\ResetPasswordNotification; 
 
 class PasswordResetController extends Controller
 {

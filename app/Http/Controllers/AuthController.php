@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -67,7 +68,7 @@ class AuthController extends Controller
             return ResponseHelper::success(message:'user profile',data:$user);
 
         }
-        
+
 
      
 }

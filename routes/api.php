@@ -18,20 +18,18 @@ Route::post('login',[AuthController::class,'login']);
 
 
 //Route::middleware('auth:api')->get('/profile', [AuthController::class, 'profile']);
-Route::middleware(['auth:api'])->group(function(){
-    Route::get('profile', [AuthController::class,'profile']);
-});
 
 
 
 Route::post('forgot-password', [PasswordResetController::class, 'sendResetLink']);
 Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
-Route::get('reset-password', [PasswordResetController::class, 'resetPassword']);
 
 
 
 Route::middleware('auth:api')->group(function () {
+    Route::get('profile', [AuthController::class,'profile']);
     Route::put('/profileUpdate', [ProfileUpdateController::class, 'update']);
+    Route::post('logout',[AuthController::class,'logout']);
 });
 
 

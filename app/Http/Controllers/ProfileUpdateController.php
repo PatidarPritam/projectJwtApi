@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Helper\ResponseHelper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -11,11 +13,11 @@ class ProfileUpdateController extends Controller
     public function update(Request $request)
     {
         
-        // Get the authenticated user
+      
         $user = Auth::user();
 
 
-        // Validate the request
+       
         $validator = Validator::make($request->all(), [
             'firstName' => 'sometimes|string|max:255',
             'lastName' => 'sometimes|string|max:255',
@@ -24,7 +26,7 @@ class ProfileUpdateController extends Controller
         ]);
 
 
-        // Return validation errors if any
+       
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
@@ -34,7 +36,6 @@ class ProfileUpdateController extends Controller
             $image = $request->file('image');
             $imagePath = $image->store('profile_images', 'public');
 
-            // Update user profile with the new image path
             $user->image = $imagePath;
         }
 
@@ -43,11 +44,9 @@ class ProfileUpdateController extends Controller
        
 
 
-        // Return a success response
-        return response()->json([
-            'message' => 'Profile updated successfully.',
-            'user' => $user
-        ]);
+       
+        return ResponseHelper::success(message:'Profile updated successfully.',data:$user);
+
     }
         
 }

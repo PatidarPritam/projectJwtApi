@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Helper\ResponseHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +19,6 @@ class PasswordResetController extends Controller
             'email' => 'required|email|exists:users,email',
         ]);
 
-        // Generate a 6-digit OTP
         $otp = rand(100000, 999999);
 
         // Store OTP in the password_resets table
@@ -29,13 +29,9 @@ class PasswordResetController extends Controller
 
         $user = User::where('email', $request->email)->first();
         if ($user) {
-            // Send OTP via email
             Notification::send($user, new ResetPasswordNotification($otp));
         }
-
-        return response()->json([
-            'message' => 'Password reset OTP sent.'
-        ]);
+        return ResponseHelper::success(  message: 'Password reset OTP sent please check.');
     }
 
     public function resetPassword(Request $request)
@@ -46,14 +42,15 @@ class PasswordResetController extends Controller
             'password' => 'required|confirmed|min:6',
         ]);
 
-        // Find OTP record
         $record = PasswordReset::where([
             ['email', $request->email],
             ['token', $request->token],
         ])->first();
 
         if (!$record) {
-            return response()->json(['message' => 'Invalid OTP or email.'], 400);
+           // return response()->json(['message' => 'Invalid OTP or email.'], 400);
+
+        return ResponseHelper::errors(message:'Invalid OTP or email');
         }
 
         // Find user and update password
@@ -64,10 +61,9 @@ class PasswordResetController extends Controller
 
             // Remove the OTP record
             PasswordReset::where('email', $request->email)->delete();
-
-            return response()->json(['message' => 'Password has been reset successfully.']);
+            return ResponseHelper::success(  message: 'Password has been reset successfully.');
         }
 
-        return response()->json(['message' => 'User not found.'], 404);
+        return ResponseHelper::errors(message:'User not found.');
     }
 }

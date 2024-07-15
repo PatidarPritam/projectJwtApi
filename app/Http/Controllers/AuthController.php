@@ -70,5 +70,14 @@ class AuthController extends Controller
         }
 
 
+        public function logout()
+        {
+            auth('api')->logout();
+    
+            return ResponseHelper::success(message: 'User logged out successfully');
+        }
+    
+
+
      
 }

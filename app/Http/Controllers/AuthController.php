@@ -67,8 +67,7 @@ class AuthController extends Controller
             return ResponseHelper::success(message:'user profile',data:$user);
 
         }
-
-        public function forgotpassword(){
         
-        }
+
+     
 }

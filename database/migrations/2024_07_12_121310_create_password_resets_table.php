@@ -4,25 +4,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreatePasswordResetsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('password_resets', function (Blueprint $table) {
             $table->string('email')->index();
-            $table->string('token');
+            $table->string('token'); // This will store the OTP
             $table->timestamp('created_at')->nullable();
+            // Add a unique constraint to the 'email' field if needed
+            $table->unique('email'); // Ensure 'email' is unique to avoid duplication
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('password_resets');
     }
-};
+}

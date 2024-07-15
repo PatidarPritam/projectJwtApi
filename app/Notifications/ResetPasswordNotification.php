@@ -1,19 +1,16 @@
 <?php
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
 class ResetPasswordNotification extends Notification
 {
-    use Queueable;
+    protected $otp;
 
-    protected $token;
-
-    public function __construct($token)
+    public function __construct($otp)
     {
-        $this->token = $token;
+        $this->otp = $otp;
     }
 
     public function via($notifiable)
@@ -23,11 +20,10 @@ class ResetPasswordNotification extends Notification
 
     public function toMail($notifiable)
     {
-        $url = url("/api/reset-password?token={$this->token}&email={$notifiable->email}");
-
         return (new MailMessage)
-            ->line('You are receiving this email because we received a password reset request for your account.')
-            ->action('Reset Password', $url)
-            ->line('If you did not request a password reset, no further action is required.');
+                    ->line('You are receiving this email because we received a password reset request for your account.')
+                    ->line('Your OTP is: ' . $this->otp)
+                    ->line('This OTP will expire shortly.')
+                    ->line('If you did not request a password reset, no further action is required.');
     }
 }
